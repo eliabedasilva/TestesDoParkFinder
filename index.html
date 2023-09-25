@@ -24,9 +24,9 @@
         // Função para atualizar a posição do pino no mapa
         function updateMarkerPosition(lat, lng) {
             if (marker) {
-                marker.setLatLng([lat, lng]);
+                marker.setLatLng([lat, lng], 19);
             } else {
-                marker = L.marker([lat, lng]).addTo(mymap);
+                marker = L.marker([lat, lng], 19).addTo(mymap);
             }
         }
         
@@ -36,7 +36,7 @@
                 var lat = position.coords.latitude;
                 var lng = position.coords.longitude;
                 
-                mymap.setView([lat, lng]);
+                mymap.setView([lat, lng], 19);
                 updateMarkerPosition(lat, lng);
             });
         } else {
@@ -48,7 +48,7 @@
             var lat = position.coords.latitude;
             var lng = position.coords.longitude;
             
-            mymap.setView([lat, lng]);
+            mymap.setView([lat, lng], 19);
             updateMarkerPosition(lat, lng);
         });
         

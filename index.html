@@ -24,9 +24,9 @@
         // Função para atualizar a posição do pino no mapa
         function updateMarkerPosition(lat, lng) {
             if (marker) {
-                marker.setLatLng([lat, lng], 19);
+                marker.setLatLng([lat, lng]);
             } else {
-                marker = L.marker([lat, lng], 19).addTo(mymap);
+                marker = L.marker([lat, lng]).addTo(mymap);
             }
         }
         

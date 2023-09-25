@@ -19,25 +19,43 @@
 
     <script>
         var mymap = L.map('map');
+        var marker;
         
-        // Obter a localização do usuário
+        // Função para atualizar a posição do pino no mapa
+        function updateMarkerPosition(lat, lng) {
+            if (marker) {
+                marker.setLatLng([lat, lng]);
+            } else {
+                marker = L.marker([lat, lng]).addTo(mymap);
+            }
+        }
+        
+        // Obter a localização do usuário e rastrear mudanças na posição
         if ("geolocation" in navigator) {
-            navigator.geolocation.getCurrentPosition(function(position) {
+            navigator.geolocation.watchPosition(function(position) {
                 var lat = position.coords.latitude;
                 var lng = position.coords.longitude;
                 
-                mymap.setView([lat, lng], 19);
-                
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                }).addTo(mymap);
-                
-                L.marker([lat, lng]).addTo(mymap)
-                    .bindPopup('Sua localização atual!').openPopup();
+                mymap.setView([lat, lng], 13);
+                updateMarkerPosition(lat, lng);
             });
         } else {
             console.log("Geolocalização não suportada pelo navegador.");
         }
+        
+        // Inicialmente, obter a posição do usuário e atualizar o mapa
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var lat = position.coords.latitude;
+            var lng = position.coords.longitude;
+            
+            mymap.setView([lat, lng], 13);
+            updateMarkerPosition(lat, lng);
+        });
+        
+        // Adicionar camada do mapa base
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(mymap);
     </script>
 </body>
 </html>

@@ -1,0 +1,23 @@
+*{
+    margin: 0;
+}
+header{
+    height: 100px;
+    background-color: black;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+}
+#map {
+    height: calc(100vh - 100px);
+}
+#otario{
+    display: inline-block;
+    padding: 20px 100px;
+    background-color: white;
+    border: 3px  solid black;
+    position: absolute;
+    top: 70%;
+    right: 70%;
+    z-index: 9999;
+}

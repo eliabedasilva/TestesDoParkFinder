@@ -36,7 +36,7 @@
                 var lat = position.coords.latitude;
                 var lng = position.coords.longitude;
                 
-                mymap.setView([lat, lng], 13);
+                mymap.setView([lat, lng]);
                 updateMarkerPosition(lat, lng);
             });
         } else {
@@ -48,7 +48,7 @@
             var lat = position.coords.latitude;
             var lng = position.coords.longitude;
             
-            mymap.setView([lat, lng], 13);
+            mymap.setView([lat, lng]);
             updateMarkerPosition(lat, lng);
         });
         

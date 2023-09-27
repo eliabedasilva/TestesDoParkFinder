@@ -16,26 +16,60 @@
     </div>
     
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
 
     <script>
-        var mymap = L.map('map');
+        var map = L.map('map');
         var marker;
-        
+        var marker2;
+        var routingControl = L.Routing.control({
+            waypoints: [],
+            routeWhileDragging: false,
+            draggableWaypoints: false,  
+            createMarker: function(i, waypoint, n) {
+                return null;
+            },
+            lineOptions: {
+                styles: [
+                    {color: 'black', weight: 4}
+                ]
+            }
+        }).addTo(map);
         // Função para atualizar a posição do pino no mapa
         function updateMarkerPosition(lat, lng) {
             if (marker) {
                 marker.setLatLng([lat, lng]);
             } else {
-                marker = L.marker([lat, lng]).addTo(mymap);
+                urlIcon = 'Imagens/usuario.png'
+                var customIcon = L.icon({
+                    iconUrl: urlIcon, 
+                    iconSize: [32, 32], 
+                    iconAnchor: [20, 20 ] 
+                });
+                marker = L.marker([lat, lng], { icon: customIcon }).addTo(map);
             }
         }
+        
+        // Coordenada de destino (substitua com suas coordenadas)
+        var destinoCoord = [-11.327686, -41.863783];
+        urlIcon = 'Imagens/pinoocupado.png'
+        var customIcon = L.icon({
+            iconUrl: urlIcon, 
+            iconSize: [32*0.8, 52*0.8], 
+            iconAnchor: [16, 32] 
+        });
+        marker2 = L.marker(destinoCoord, { icon: customIcon }).addTo(map);
+        
+        // Criar a rota
         
         // Obter a localização do usuário e rastrear mudanças na posição
         if ("geolocation" in navigator) {
             navigator.geolocation.watchPosition(function(position) {
                 var lat = position.coords.latitude;
                 var lng = position.coords.longitude;
-                
+                userPosition = [lat, lng]
+                routingControl.setWaypoints([userPosition, destinoCoord])
+                routingControl.route()
                 updateMarkerPosition(lat, lng);
             });
         } else {
@@ -46,14 +80,14 @@
         navigator.geolocation.getCurrentPosition(function(position) {
             var lat = position.coords.latitude;
             var lng = position.coords.longitude;
-            
+            map.setView([lat, lng], 19)
             updateMarkerPosition(lat, lng);
         });
         
         // Adicionar camada do mapa base
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(mymap);
+        }).addTo(map);
     </script>
 </body>
 </html>

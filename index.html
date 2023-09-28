@@ -9,6 +9,12 @@
 </head>
 <body>
     <header>
+        <button>Criar rota</button>
+        <div class="botoes">
+            <button id="btnLivre" type="button" onclick="livre()">ZONA LIVRE</button>
+            <button id="btnPaga" type="button" onclick="paga()">ZONA PAGA</button>
+            <button id="btnDeficiente" type="button" onclick="deficiente()">ZONA DEFICIENTE</button>
+        </div>
     </header>
     <div id="map"></div>
     <div id="otario">
@@ -22,6 +28,9 @@
         var map = L.map('map');
         var marker;
         var marker2;
+        var userPosition;
+        var pinoWidth = 26;
+        var pinoHeight = (585/398) * pinoWidth;
         var routingControl = L.Routing.control({
             waypoints: [],
             routeWhileDragging: false,
@@ -44,23 +53,21 @@
                 var customIcon = L.icon({
                     iconUrl: urlIcon, 
                     iconSize: [32, 32], 
-                    iconAnchor: [20, 20 ] 
+                    iconAnchor: [16, 16 ] 
                 });
                 marker = L.marker([lat, lng], { icon: customIcon }).addTo(map);
             }
         }
         
         // Coordenada de destino (substitua com suas coordenadas)
-        var destinoCoord = [-11.327686, -41.863783];
+        var destinoCoord = [-11.326880, -41.865054];
         urlIcon = 'Imagens/pinoocupado.png'
         var customIcon = L.icon({
             iconUrl: urlIcon, 
-            iconSize: [32*0.8, 52*0.8], 
-            iconAnchor: [16, 32] 
+            iconSize: [pinoWidth, pinoHeight], 
+            iconAnchor: [pinoWidth/2, pinoHeight] 
         });
         marker2 = L.marker(destinoCoord, { icon: customIcon }).addTo(map);
-        
-        // Criar a rota
         
         // Obter a localização do usuário e rastrear mudanças na posição
         if ("geolocation" in navigator) {
@@ -68,8 +75,10 @@
                 var lat = position.coords.latitude;
                 var lng = position.coords.longitude;
                 userPosition = [lat, lng]
-                routingControl.setWaypoints([userPosition, destinoCoord])
-                routingControl.route()
+                if(routingControl.getWaypoints()[0].latLng != null){
+                    routingControl.setWaypoints([userPosition, destinoCoord])
+                    routingControl.route()
+                }
                 updateMarkerPosition(lat, lng);
             });
         } else {
@@ -86,8 +95,44 @@
         
         // Adicionar camada do mapa base
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 23,
         }).addTo(map);
+
+        // adiconando a rota quandp clicar no botão
+        document.querySelector('button').addEventListener('click', ()=>{
+            routingControl.setWaypoints([userPosition, destinoCoord])
+            if (document.querySelector('header > div').style.display === 'none'){
+                document.querySelector('header > div').style.display = 'flex'
+            } else {
+                document.querySelector('header > div').style.display = 'none'
+            }
+        })
+        function livre() {
+            const botao = document.getElementById("btnLivre")
+            if (botao.style.backgroundColor!="rgb(157, 157, 157)"){ 
+                botao.style.backgroundColor= "#9D9D9D";
+            } else {
+                botao.style.backgroundColor= "#58D443";
+            }
+        }
+
+        function paga() {
+            const botao = document.getElementById("btnPaga")
+            if (botao.style.backgroundColor!="rgb(70, 67, 212)"){ 
+                botao.style.backgroundColor= "#4643D4";
+            } else {
+                botao.style.backgroundColor= "#9D9D9D";
+            }
+        }
+        function deficiente(){
+            const botao = document.getElementById("btnDeficiente")
+            if (botao.style.backgroundColor!="rgb(67, 186, 212)"){ 
+                botao.style.backgroundColor= "#43BAD4";
+            } else {
+                botao.style.backgroundColor= "#9D9D9D";
+            }
+        }
     </script>
 </body>
 </html>

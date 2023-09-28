@@ -102,7 +102,7 @@
         // adiconando a rota quandp clicar no botão
         document.querySelector('button').addEventListener('click', ()=>{
             routingControl.setWaypoints([userPosition, destinoCoord])
-            if (document.querySelector('header > div').style.display === 'none'){
+            if (document.querySelector('header > div').style.display === 'none' || document.querySelector('header > div').style.display === ''){
                 document.querySelector('header > div').style.display = 'flex'
             } else {
                 document.querySelector('header > div').style.display = 'none'

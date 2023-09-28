@@ -62,7 +62,7 @@ header > div{
     right: 70%;
     z-index: 9999;
 }
-.leaflet-routing-container .leaflet-routing-alternatives-container {
+.leaflet-routing-container{
     display: none   ;
 }
 header > button{

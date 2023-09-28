@@ -69,30 +69,42 @@
         });
         marker2 = L.marker(destinoCoord, { icon: customIcon }).addTo(map);
         
-        // Obter a localização do usuário e rastrear mudanças na posição
         if ("geolocation" in navigator) {
-            navigator.geolocation.watchPosition(function(position) {
-                var lat = position.coords.latitude;
-                var lng = position.coords.longitude;
-                userPosition = [lat, lng]
-                if(routingControl.getWaypoints()[0].latLng != null){
-                    routingControl.setWaypoints([userPosition, destinoCoord])
-                    routingControl.route()
-                }
-                updateMarkerPosition(lat, lng);
-            });
-        } else { 
+            var options = {
+                enableHighAccuracy: true,  // Ativar alta precisão
+                maximumAge: 5000,  // Idade máxima de 30 segundos para a posição
+                timeout: 10000      // Tempo limite de 10 segundos para obter a posição
+            };
+
+            navigator.geolocation.watchPosition(
+                function(position) {
+                    var lat = position.coords.latitude;
+                    var lng = position.coords.longitude;
+                    userPosition = [lat, lng];
+
+                    if (routingControl.getWaypoints()[0].latLng != null) {
+                        routingControl.setWaypoints([userPosition, destinoCoord]);
+                        routingControl.route();
+                    }
+
+                    updateMarkerPosition(lat, lng);
+                },
+                function(error) {
+                    console.error("Erro ao obter a posição:", error);
+                },
+                options  // Passando as opções de geolocalização
+            );
+        } else {
             console.log("Geolocalização não suportada pelo navegador.");
         }
-        
-        // Inicialmente, obter a posição do usuário e atualizar o mapa
+
         navigator.geolocation.getCurrentPosition(function(position) {
             var lat = position.coords.latitude;
             var lng = position.coords.longitude;
+            userPosition = [lat, lng]
             map.setView([lat, lng], 19)
             updateMarkerPosition(lat, lng);
         });
-        
         // Adicionar camada do mapa base
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
